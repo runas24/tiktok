@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор ссылок</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        .container h1 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+        }
+        .result textarea {
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Генератор ссылок</h1>
+        <label for="input-urls">Введите партнерские ссылки (каждая с новой строки):</label>
+        <textarea id="input-urls" placeholder="Введите ссылки здесь..."></textarea>
+        <button id="generate-links">Сгенерировать ссылки</button>
+        <div class="result">
+            <label for="output-links">Сгенерированные ссылки:</label>
+            <textarea id="output-links" readonly></textarea>
+        </div>
+    </div>
+
+    <script>
+        const baseUrl = "https://pikabu.ru/story/multivalyutnaya_karta_kazakhstana_kak_ya_ee_oformila_pryamo_iz_doma_11783796";
+
+        function addHttpsIfMissing(url) {
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                return 'https://' + url;
+            }
+            return url;
+        }
+
+        function generateLinks() {
+            const inputField = document.getElementById('input-urls');
+            const outputField = document.getElementById('output-links');
+
+            // Получаем введённые URL и разделяем их по строкам
+            const urls = inputField.value.trim().split(/\r?\n/);
+            let resultLinks = '';
+
+            urls.forEach((url) => {
+                const trimmedUrl = url.trim();
+                if (trimmedUrl) {
+                    const safeUrl = addHttpsIfMissing(trimmedUrl);
+                    const encodedUrl = encodeURIComponent(safeUrl);
+                    const finalLink = `${baseUrl}?goto=${encodedUrl}&cv=dv&lh=dae58`;
+                    resultLinks += finalLink + '\n\n';
+                }
+            });
+
+            // Выводим сгенерированные ссылки
+            outputField.value = resultLinks;
+        }
+
+        document.getElementById('generate-links').addEventListener('click', generateLinks);
+    </script>
+</body>
+</html>
